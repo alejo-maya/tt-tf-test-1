@@ -1,0 +1,13 @@
+terraform init
+
+terraform plan -var-file="values.tfvars" -out state.tfplan
+
+terraform apply "state.tfplan"
+
+
+
+--------------- destroy
+
+terraform plan -destroy -var-file="values.tfvars" -out destroy.tfplan
+
+terraform apply "destroy.tfplan"

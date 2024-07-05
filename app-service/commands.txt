@@ -1,0 +1,13 @@
+terraform init -backend-config="state.backend.conf"
+
+terraform plan -var-file="values.tfvars" -out webapp.tfplan
+
+terraform apply "webapp.tfplan"
+
+
+
+--------------- destroy
+
+terraform plan -destroy -var-file="values.tfvars" -out destroy.tfplan
+
+terraform apply "destroy.tfplan"
