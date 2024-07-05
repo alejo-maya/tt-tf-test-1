@@ -1,10 +1,15 @@
+resource "random_integer" "sa_num" {
+  min = 10000
+  max = 99999
+}
+
 resource "azurerm_resource_group" "setup" {
   name     = var.resource_group_name
   location = var.location
 }
 
 resource "azurerm_storage_account" "sa" {
-  name                     = "${lower(var.naming_prefix)}"
+  name                     = "${lower(var.naming_prefix)}${random_integer.sa_num.result}"
   resource_group_name      = azurerm_resource_group.setup.name
   location                 = var.location
   account_tier             = "Standard"
@@ -12,8 +17,8 @@ resource "azurerm_storage_account" "sa" {
 }
 
 resource "azurerm_storage_container" "ct" {
-  name                 = "terraform-state"
-  storage_account_name = azurerm_storage_account.sa.name
+  name                  = "terraform-state"
+  storage_account_name  = azurerm_storage_account.sa.name
 }
 
 data "azurerm_storage_account_sas" "state" {
@@ -34,7 +39,7 @@ data "azurerm_storage_account_sas" "state" {
   }
 
   start  = timestamp()
-  expiry = local.sas_expiry
+  expiry = timeadd(timestamp(), "17520h")
 
   permissions {
     read    = true
